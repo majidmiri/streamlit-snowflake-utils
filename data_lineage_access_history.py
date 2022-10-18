@@ -18,10 +18,10 @@ def get_tables(database_id):
     FROM 
         snowflake.account_usage.tables
     WHERE 
-        table_catalog_id={0} 
+        table_catalog_id={database_id} 
         AND deleted IS NULL
     ORDER BY 1
-    """.format(database_id)).toPandas())
+    """.format(database_id=database_id)).toPandas())
     
 
 
@@ -42,6 +42,8 @@ def get_queries(query_window,object_id,access_type):
             tgt.value:columns target_columns
         FROM 
             snowflake.account_usage.access_history ah,
+            -- If the view is slow, physicalize the view above and use the persisted table instead, for example: 
+            -- snowflake_archive.account_usage.access_history ah
         LATERAL FLATTEN 
             (input => ah.{access_type}_OBJECTS_ACCESSED) as src,
         LATERAL FLATTEN 
@@ -189,12 +191,12 @@ if not '<Select>' in sb_database:
                 node [shape=none, margin=0]
                 edge [arrowtail=none, dir=both]
             
-            {0}
-            {1}
-            {2}
+            {sources}
+            {target}
+            {relationships}
 
             }} 
-            """.format(sources,target,relationships)
+            """.format(sources=sources,target=target,relationships=relationships)
             
             st.subheader('Diagram')
             st.graphviz_chart(graph,use_container_width=True)

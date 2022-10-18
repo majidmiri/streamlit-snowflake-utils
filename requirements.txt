@@ -1,0 +1,5 @@
+graphviz
+pandas
+snowflake-snowpark-python
+streamlit
+streamlit-aggrid

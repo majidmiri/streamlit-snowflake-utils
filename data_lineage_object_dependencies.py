@@ -49,7 +49,7 @@ if not '<Select>' in sb_database:
                 '"'||referencing_database||'"."'||referencing_schema||'"."'||referencing_object_name||'"' target_object_name 
             FROM                 
                 snowflake.account_usage.object_dependencies
-                -- If the view is slow, persist the view above and use the table instead, for example: 
+                -- If the view is slow, physicalize the view above and use the persisted table instead, for example: 
                 -- snowflake_archive.account_usage.object_dependencies
         ),
         cte_parents AS 
