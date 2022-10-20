@@ -144,20 +144,23 @@ if not '<Select>' in sb_database:
             
             st.markdown("***")
             st.subheader('Query')
-            st.markdown(str(df_dependencies_filtered.iloc[0]["QUERY_TEXT"]))
+            st.components.v1.html("<p>"+str(df_dependencies_filtered.iloc[0]["QUERY_TEXT"])+"</p>")
 
             sources = ""
             target = ""
             relationships = ""
             index = 0
 
-            for row in df_dependencies_filtered.iterrows():
+            for row in df_dependencies_filtered.iterrows():                
                 source_columns = ""
                 index += 1
-
-                cols = json.loads(row[1]["SOURCE_COLUMNS"])
-                for col in cols:
-                    source_columns += """<tr><td align="left">{0}</td></tr>\n""".format(col["columnName"])
+                
+                try:
+                    cols = json.loads(row[1]["SOURCE_COLUMNS"])
+                    for col in cols:
+                        source_columns += """<tr><td align="left">{0}</td></tr>\n""".format(col["columnName"])
+                except:
+                    source_columns = """<tr><td align="left"> </td></tr>\n"""
 
                 sources += """
                 source{index} [label=<\n
@@ -200,4 +203,3 @@ if not '<Select>' in sb_database:
             
             st.subheader('Diagram')
             st.graphviz_chart(graph,use_container_width=True)
-
